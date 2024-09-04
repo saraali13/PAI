@@ -8,7 +8,7 @@ try:
     with open('example','w') as file:
         file.write("Bio Data of the Employee:\n")
         for i in range(len(l1)):
-            file.write(str(f"{l1[i]} ,"))
+            file.write(str(f"{l1[i]} , "))
 except Exception as e:
     print(str(e))
 
