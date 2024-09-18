@@ -10,7 +10,6 @@ class Vehicle:
 class Bus(Vehicle):
     def __init__(self, seating):
         super().__init__(seating)
-        self.seating_capacity = seating
 
     def fare_Bus(self):
         fare = self.fare() + (self.fare() * 10 / 100)
