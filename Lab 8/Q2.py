@@ -1,6 +1,6 @@
 import numpy as np
 
-arr1 = np.linspace(1, 19, 9)
+arr1 = np.arange(1, 19, 9)
 print(arr1)
 
 arr2 = arr1.reshape(3, 3)
