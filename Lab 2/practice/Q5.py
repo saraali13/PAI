@@ -6,4 +6,4 @@ if(ans == "yes" or ans == "Yes"):
     print('"Thanks for your feedback,we will resolve your problem"')
 
 else:
-    print(center("Okay! Good to see you , stay connected"))
+    print("Okay! Good to see you , stay connected")
