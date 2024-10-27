@@ -23,10 +23,7 @@ class Animal:
     def set_habitat(self, value):
         self._habitat = value
 
-    def get_is_available(self):
-        return self._is_available
-
-    def set_is_available(self, available):
+    def change_availability_status(self, available):
         self._is_available = available
 
     def display_info(self):
@@ -111,7 +108,6 @@ class Reptile(Animal):
 M1 = Mammal("Elephant", 15, "Jungle", True, "Short", "Herbivore")
 M2 = Mammal("Whale", 12, "Ocean", True, "tiny", "Omnivore")
 B1 = Bird("Eagle", 9, "Mountains", False, 6.5, 4000)
-B2 = Bird("Hen", 5, "Land", True, 2.3, 2000)
 R1 = Reptile("Cobra", 7, "Jungle", True, "Smooth", "Venomous")
 R2 = Reptile("Crocodile", 8, "Land and water", True, "Rough", "Not Venomous")
 
@@ -119,21 +115,19 @@ print("Zoo Management System:")
 print(M1.display_info())
 print(M2.display_info())
 print(B1.display_info())
-print(B2.display_info())
 print(R1.display_info())
 print(R2.display_info())
 
-# Updating info
-M2.set_is_available(False)
-R1.set_is_available(False)
-B1.set_is_available(True)
-B2.set_age(10)
+# Updating availability status
+M2.change_availability_status(False)
+R1.change_availability_status(False)
+B1.change_availability_status(True)
+
 
 print("\nInformation after update: ")
 print("Zoo Management System:")
 print(M1.display_info())
 print(M2.display_info())
 print(B1.display_info())
-print(B2.display_info())
 print(R1.display_info())
 print(R2.display_info())
