@@ -4,6 +4,7 @@ import pandas as pd
 
 df = pd.read_csv("heart.csv")
 
+#paper 2
 plt.figure()
 sns.histplot(data=df,x="fbs")
 plt.show()
@@ -29,3 +30,4 @@ plt.figure()
 sns.pairplot(df,hue="age")
 plt.show()
 
+#paper 1
