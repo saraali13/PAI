@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-#Boston Housing DataSet
 # data preparation and understanding
 df = pd.read_csv("housing.csv")
 print(df.head())
