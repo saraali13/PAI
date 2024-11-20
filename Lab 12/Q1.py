@@ -24,7 +24,7 @@ plt.figure()
 plt.plot(frame["Cluster"], frame["SSE"],marker='o')
 plt.title('Elbow Method for Optimal k')
 plt.xlabel('Number of clusters')
-plt.ylabel('WCSS (Within-Cluster Sum of Squares)')
+plt.ylabel('Within-Cluster Sum of Squares')
 plt.grid(True)
 plt.show()
 
@@ -49,4 +49,3 @@ plt.grid(True)
 plt.show()
 
 print(data.head())
-
