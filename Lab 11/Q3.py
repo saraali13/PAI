@@ -14,7 +14,7 @@ column_names = [
 ]
 data = pd.read_csv("dermatology_data.csv", header=None, names=column_names, na_values=["?"])
 
-data['age'].fillna(data['age'].mean(), inplace=True)
+data['age'] = data['age'].fillna(data['age'].mean())
 
 X = data.drop(columns=['class'])
 y = data['class']
