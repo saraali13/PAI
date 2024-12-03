@@ -1,38 +1,39 @@
-from sklearn.datasets import load_iris
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
-import pandas as pd
-import numpy as np
 
-# Load the heart disease dataset
-df = pd.read_csv('heart.csv')
-y = df.pop('target')
+df = pd.read_csv("heart.csv")
 
-# Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.2, random_state=8)
+X = df.drop(columns=["target"])
+y = df["target"]
 
-haccuracy = -1
-laccuracy = 1
+scaler = StandardScaler()
+neighbors_range = range(1, 251)
+seed_accuracies = {}
+for seed in range(1, 11):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed, stratify=y)
 
-for i in range(1, 11):
-  X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.2, random_state=i)
-  knn = KNeighborsClassifier(n_neighbors=i)
-  knn.fit(X_train, y_train)
-  y_pred = knn.predict(X_test)
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
 
-  accuracy = accuracy_score(y_test, y_pred)
-  print(accuracy," ")
-  # Update highest accuracy
-  if accuracy > haccuracy:
-      haccuracy = accuracy
+    accuracies = []
 
-  # Update lowest accuracy
-  if accuracy < laccuracy:
-      laccuracy = accuracy
+    for k in neighbors_range:
+        knn = KNeighborsClassifier(n_neighbors=k)
+        knn.fit(X_train_scaled, y_train)
+        y_prediction = knn.predict(X_test_scaled)
+        accuracies.append(accuracy_score(y_test, y_prediction))
 
+    seed_accuracies[seed] = max(accuracies)
 
-# Output the results
-print("Highest Accuracy: ", haccuracy)
-print("Lowest Accuracy: ", laccuracy)
+print("Accuracies for each random seed:")
+for seed, accuracy in seed_accuracies.items():
+    print(f"Seed {seed}: {accuracy:.2f}")
+
+highest_seed = max(seed_accuracies, key=seed_accuracies.get)
+lowest_seed = min(seed_accuracies, key=seed_accuracies.get)
+
+print(f"\nHighest Accuracy: {seed_accuracies[highest_seed]:.2f} (Seed {highest_seed})")
+print(f"Lowest Accuracy: {seed_accuracies[lowest_seed]:.2f} (Seed {lowest_seed})")
