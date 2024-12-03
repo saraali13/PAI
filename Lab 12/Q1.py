@@ -1,51 +1,80 @@
-# Importing required libraries
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+from matplotlib import pyplot as plt
 
-#column_names = ["id","diagnosis","radius_mean","texture_mean","perimeter_mean","area_mean","smoothness_mean","compactness_mean","concavity_mean","concave points_mean","symmetry_mean","fractal_dimension_mean","radius_se","texture_se","perimeter_se","area_se","smoothness_se","compactness_se","concavity_se","concave points_se","symmetry_se","fractal_dimension_se","radius_worst","texture_worst","perimeter_worst","area_worst","smoothness_worst","compactness_worst","concavity_worst","concave points_worst","symmetry_worst","fractal_dimension_worst"]
+df = pd.read_csv('Iris.csv')
+df = df.drop(columns=['SepalWidthCm', 'SepalLengthCm'])
+print(df.head())
 
-data = pd.read_csv("data.csv")
-
-scaler = StandardScaler()
-data_scaled = scaler.fit_transform(data)
-kmeans=KMeans(n_clusters=2, init="k-means++")
-kmeans.fit(data_scaled)
-print(kmeans.inertia_)
-SSE = []
-for i in range(1, 20):
-    kmeans = KMeans(n_clusters=i, init='k-means++')
-    kmeans.fit(data_scaled)
-    SSE.append(kmeans.inertia_)
-
-plt.figure()
-plt.plot(frame["Cluster"], frame["SSE"],marker='o')
-plt.title('Elbow Method for Optimal k')
-plt.xlabel('Number of clusters')
-plt.ylabel('Within-Cluster Sum of Squares')
-plt.grid(True)
+plt.scatter(df['PetalWidthCm'], df['PetalLengthCm'])
 plt.show()
 
-optimal_k = 3
-kmeans = KMeans(n_clusters=optimal_k, init='k-means++', max_iter=300, n_init=10, random_state=0)
-y_kmeans = kmeans.fit_predict(data_scaled)
+km = KMeans(n_clusters=3)
 
-data['Cluster'] = y_kmeans
+y_predicted = km.fit_predict(df[['PetalLengthCm', 'PetalWidthCm']])
+print(y_predicted)
 
-plt.figure(figsize=(8,6))
-plt.scatter(data_scaled[y_kmeans == 0, 0], data_scaled[y_kmeans == 0, 1], s=100, c='red', label='Cluster 1')
-plt.scatter(data_scaled[y_kmeans == 1, 0], data_scaled[y_kmeans == 1, 1], s=100, c='blue', label='Cluster 2')
-plt.scatter(data_scaled[y_kmeans == 2, 0], data_scaled[y_kmeans == 2, 1], s=100, c='green', label='Cluster 3')
+df['cluster'] = y_predicted
+print(df.head())
 
-plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], s=300, c='yellow', marker='X', label='Centroids')
+df1 = df[df.cluster == 0]
+df2 = df[df.cluster == 1]
+df3 = df[df.cluster == 2]
 
-plt.title('K-Means Clustering (k=3)')
-plt.xlabel('Feature 1')
-plt.ylabel('Feature 2')
+plt.scatter(df1['PetalWidthCm'], df1['PetalLengthCm'], color = 'green')
+plt.scatter(df2['PetalWidthCm'], df2['PetalLengthCm'], color = 'red')
+plt.scatter(df3['PetalWidthCm'], df3['PetalLengthCm'], color = 'blue')
+
+plt.xlabel('PetalLengthCm')
+plt.ylabel('PetalWidthCm')
+
 plt.legend()
-plt.grid(True)
 plt.show()
 
-print(data.head())
+scaler = MinMaxScaler()
+scaler.fit(df[['PetalLengthCm']])
+df[['PetalLengthCm']] = scaler.transform(df[['PetalLengthCm']])
+
+scaler.fit(df[['PetalWidthCm']])
+df[['PetalWidthCm']] = scaler.transform(df[['PetalWidthCm']])
+print(df)
+
+km = KMeans(n_clusters=3)
+y_predicted = km.fit_predict(df[['PetalLengthCm', 'PetalWidthCm']])
+print(y_predicted)
+
+df['cluster'] = y_predicted
+print(df)
+print(km.cluster_centers_)
+
+df1 = df[df.cluster == 0]
+df2 = df[df.cluster == 1]
+df3 = df[df.cluster == 2]
+
+plt.scatter(df1['PetalWidthCm'], df1['PetalLengthCm'], color = 'green')
+plt.scatter(df2['PetalWidthCm'], df2['PetalLengthCm'], color = 'red')
+plt.scatter(df3['PetalWidthCm'], df3['PetalLengthCm'], color = 'blue')
+
+plt.xlabel('PetalLengthCm')
+plt.ylabel('PetalWidthCm')
+
+plt.scatter(km.cluster_centers_[:, 0], km.cluster_centers_[:, 1], color = 'purple', label = 'centroid', marker = "+")
+
+plt.legend()
+plt.show()
+
+k_rng = range(1, 10)
+sse = []
+
+for k in k_rng:
+    km = KMeans(n_clusters=k)
+    km.fit(df[['PetalWidthCm', 'PetalLengthCm']])
+    sse.append(km.inertia_)
+
+print(sse)
+
+plt.xlabel('K')
+plt.ylabel('Sum of sqaured errors')
+plt.plot(k_rng, sse)
+plt.show()
